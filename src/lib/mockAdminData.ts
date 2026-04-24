@@ -1,4 +1,6 @@
 // Mock data for admin dashboard
+import { MOCK_CONTRACTS, MOCK_ESCROW_TX } from './mockContracts';
+import { MOCK_AS_TICKETS, checkSlaCompliance } from './mockAsTickets';
 
 export interface EventLog {
   id: string;
@@ -106,7 +108,6 @@ export const MOCK_AUDIT_LOGS: AuditLog[] = [
 
 // Helper functions for admin dashboard KPIs
 export function getEscrowReleasesPending(): number {
-  const { MOCK_CONTRACTS, MOCK_ESCROW_TX } = require('./mockContracts');
   return MOCK_CONTRACTS.filter(
     (c: any) =>
       c.status === 'release_pending' &&
@@ -115,12 +116,10 @@ export function getEscrowReleasesPending(): number {
 }
 
 export function getDisputesInProgress(): number {
-  const { MOCK_CONTRACTS } = require('./mockContracts');
   return MOCK_CONTRACTS.filter((c: any) => c.status === 'disputed').length;
 }
 
 export function getUnassignedAsTickets(): number {
-  const { MOCK_AS_TICKETS } = require('./mockAsTickets');
   const now = Date.now();
   const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
 
@@ -156,8 +155,6 @@ export function getEventLogsByDateRange(startDate: Date, endDate: Date): EventLo
 
 // Calculate AS SLA metrics
 export function getAsSlaMetrics() {
-  const { MOCK_AS_TICKETS, checkSlaCompliance } = require('./mockAsTickets');
-
   const completedTickets = MOCK_AS_TICKETS.filter((t: any) => t.status === 'resolved');
   const slaCompliant = completedTickets.filter((t: any) => checkSlaCompliance(t));
   const successRate = completedTickets.length > 0
@@ -183,7 +180,6 @@ export function getAsSlaMetrics() {
 
 // Mock function to confirm escrow deposit
 export function confirmEscrowDeposit(contractId: string, adminMemo: string): boolean {
-  const { MOCK_ESCROW_TX } = require('./mockContracts');
   const escrow = MOCK_ESCROW_TX[contractId];
 
   if (!escrow || escrow.state !== 'pending') return false;
@@ -200,7 +196,6 @@ export function confirmEscrowDeposit(contractId: string, adminMemo: string): boo
 
 // Mock function to release escrow
 export function releaseEscrow(contractId: string, adminMemo: string): boolean {
-  const { MOCK_ESCROW_TX, MOCK_CONTRACTS } = require('./mockContracts');
   const escrow = MOCK_ESCROW_TX[contractId];
   const contract = MOCK_CONTRACTS.find((c: any) => c.id === contractId);
 
