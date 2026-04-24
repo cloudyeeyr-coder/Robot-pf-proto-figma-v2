@@ -1,4 +1,4 @@
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '../ui/button';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Badge } from '../ui/badge';
+import { NotificationDropdown } from './NotificationDropdown';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -95,20 +95,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative"
-                  aria-label="알림 3건"
-                >
-                  <Bell className="h-5 w-5" />
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
-                  >
-                    3
-                  </Badge>
-                </Button>
+                <NotificationDropdown userId={user?.id || ''} />
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -138,19 +125,19 @@ export function Header({ onMenuClick }: HeaderProps) {
               </>
             ) : (
               <>
-                <Button variant="ghost" asChild>
-                  <Link to="/login">로그인</Link>
+                <Button variant="ghost" onClick={() => window.location.href = '/login'}>
+                  로그인
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button>회원가입</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
-                      <Link to="/signup/buyer">수요기업 가입</Link>
+                    <DropdownMenuItem onClick={() => window.location.href = '/signup/buyer'}>
+                      수요기업 가입
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/signup/partner">SI 파트너 가입</Link>
+                    <DropdownMenuItem onClick={() => window.location.href = '/signup/partner'}>
+                      SI 파트너 가입
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -18,12 +18,12 @@ export function HomePage() {
             만약의 상황에서도 AS를 보장받으세요
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link to="/search">SI 파트너 찾기</Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link to="/calculator">RaaS 계산기</Link>
-            </Button>
+            <Link to="/search">
+              <Button size="lg">SI 파트너 찾기</Button>
+            </Link>
+            <Link to="/calculator">
+              <Button size="lg" variant="outline">RaaS 계산기</Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -99,12 +99,12 @@ export function HomePage() {
             각 역할에 맞는 서비스를 제공합니다
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" asChild>
-              <Link to="/signup/buyer">수요기업 가입</Link>
-            </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-blue-700" asChild>
-              <Link to="/signup/partner">SI 파트너 가입</Link>
-            </Button>
+            <Link to="/signup/buyer">
+              <Button size="lg" variant="secondary">수요기업 가입</Button>
+            </Link>
+            <Link to="/signup/partner">
+              <Button size="lg" variant="outline" className="text-white border-white bg-blue-600 hover:bg-blue-700">SI 파트너 가입</Button>
+            </Link>
           </div>
         </div>
       </section>

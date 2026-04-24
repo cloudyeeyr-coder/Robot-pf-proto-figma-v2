@@ -15,6 +15,30 @@ import { PlaceholderPage } from '../pages/Placeholder';
 import { BuyerSignupPage } from '../pages/signup/BuyerSignup';
 import { SiPartnerSignupPage } from '../pages/signup/SiPartnerSignup';
 import { PartnerPendingPage } from '../pages/signup/PartnerPending';
+import { SearchPage } from '../pages/Search';
+import { SiPartnerDetailPage } from '../pages/SiPartnerDetail';
+import { CalculatorPage } from '../pages/Calculator';
+import { EscrowPaymentPage } from '../pages/contracts/EscrowPayment';
+import { PaymentStatusPage } from '../pages/contracts/PaymentStatus';
+import { WarrantyPage } from '../pages/contracts/Warranty';
+import { InspectionPage } from '../pages/contracts/Inspection';
+import { DisputePage } from '../pages/contracts/Dispute';
+import { NewAsTicketPage } from '../pages/as/NewAsTicket';
+import { AsTicketTrackingPage } from '../pages/as/AsTicketTracking';
+import { PartnerProfilePage } from '../pages/partner/Profile';
+import { PartnerProposalsPage } from '../pages/partner/Proposals';
+import { PartnerBadgesPage } from '../pages/partner/Badges';
+import { ManufacturerDashboardPage } from '../pages/manufacturer/Dashboard';
+import { BadgeManagementPage } from '../pages/manufacturer/BadgeManagement';
+import { ProposalManagementPage } from '../pages/manufacturer/ProposalManagement';
+import { AdminDashboardPage } from '../pages/admin/Dashboard';
+import { EscrowManagementPage } from '../pages/admin/EscrowManagement';
+import { AsSlaMonitoringPage } from '../pages/admin/AsSlaMonitoring';
+import { EventLogsPage } from '../pages/admin/EventLogs';
+import { DisputesPage } from '../pages/admin/Disputes';
+import { NotificationsPage } from '../pages/Notifications';
+import { BookingPage } from '../pages/Booking';
+import { BookingConfirmationPage } from '../pages/BookingConfirmation';
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -48,7 +72,15 @@ function AppRoutes() {
         path="/search"
         element={
           <PublicLayout>
-            <PlaceholderPage />
+            <SearchPage />
+          </PublicLayout>
+        }
+      />
+      <Route
+        path="/search/:siPartnerId"
+        element={
+          <PublicLayout>
+            <SiPartnerDetailPage />
           </PublicLayout>
         }
       />
@@ -56,7 +88,7 @@ function AppRoutes() {
         path="/calculator"
         element={
           <PublicLayout>
-            <PlaceholderPage />
+            <CalculatorPage />
           </PublicLayout>
         }
       />
@@ -76,6 +108,76 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/contracts/:contractId/payment"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <EscrowPaymentPage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/contracts/:contractId/payment/status"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <PaymentStatusPage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/contracts/:contractId/warranty"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <WarrantyPage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/contracts/:contractId/inspection"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <InspectionPage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/contracts/:contractId/dispute"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <DisputePage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/contracts/:contractId/as/new"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <NewAsTicketPage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/contracts/:contractId/as/:ticketId"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <AsTicketTrackingPage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
         path="/my/as-tickets"
         element={
           <RouteGuard requiredRole="buyer">
@@ -90,8 +192,28 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="buyer">
             <RoleLayout role="buyer">
-              <PlaceholderPage />
+              <BookingPage />
             </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/booking/:bookingId"
+        element={
+          <RouteGuard requiredRole="buyer">
+            <RoleLayout role="buyer">
+              <BookingConfirmationPage />
+            </RoleLayout>
+          </RouteGuard>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <RouteGuard requireAuth>
+            <PublicLayout>
+              <NotificationsPage />
+            </PublicLayout>
           </RouteGuard>
         }
       />
@@ -102,7 +224,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="si_partner">
             <RoleLayout role="si_partner" showSidebar>
-              <PlaceholderPage />
+              <PartnerProfilePage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -112,7 +234,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="si_partner">
             <RoleLayout role="si_partner" showSidebar>
-              <PlaceholderPage />
+              <PartnerProposalsPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -122,7 +244,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="si_partner">
             <RoleLayout role="si_partner" showSidebar>
-              <PlaceholderPage />
+              <PartnerBadgesPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -134,7 +256,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="manufacturer">
             <RoleLayout role="manufacturer" showSidebar>
-              <PlaceholderPage />
+              <ManufacturerDashboardPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -144,7 +266,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="manufacturer">
             <RoleLayout role="manufacturer" showSidebar>
-              <PlaceholderPage />
+              <BadgeManagementPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -154,7 +276,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="manufacturer">
             <RoleLayout role="manufacturer" showSidebar>
-              <PlaceholderPage />
+              <ProposalManagementPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -166,7 +288,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="admin">
             <RoleLayout role="admin" showSidebar>
-              <PlaceholderPage />
+              <AdminDashboardPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -176,7 +298,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="admin">
             <RoleLayout role="admin" showSidebar>
-              <PlaceholderPage />
+              <EscrowManagementPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -186,7 +308,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="admin">
             <RoleLayout role="admin" showSidebar>
-              <PlaceholderPage />
+              <AsSlaMonitoringPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -196,7 +318,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="admin">
             <RoleLayout role="admin" showSidebar>
-              <PlaceholderPage />
+              <EventLogsPage />
             </RoleLayout>
           </RouteGuard>
         }
@@ -206,7 +328,7 @@ function AppRoutes() {
         element={
           <RouteGuard requiredRole="admin">
             <RoleLayout role="admin" showSidebar>
-              <PlaceholderPage />
+              <DisputesPage />
             </RoleLayout>
           </RouteGuard>
         }

@@ -17,12 +17,12 @@ export function ForbiddenPage() {
           올바른 계정으로 로그인했는지 확인해주세요.
         </p>
         <div className="flex gap-4 justify-center">
-          <Button variant="outline" asChild>
-            <Link to="/">홈으로 돌아가기</Link>
-          </Button>
-          <Button asChild>
-            <Link to="/login">로그인</Link>
-          </Button>
+          <Link to="/">
+            <Button variant="outline">홈으로 돌아가기</Button>
+          </Link>
+          <Link to="/login">
+            <Button>로그인</Button>
+          </Link>
         </div>
       </div>
     </div>

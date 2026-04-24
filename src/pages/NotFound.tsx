@@ -12,9 +12,9 @@ export function NotFoundPage() {
         <p className="text-gray-600 mb-8">
           요청하신 페이지가 존재하지 않거나 이동되었습니다.
         </p>
-        <Button asChild>
-          <Link to="/">홈으로 돌아가기</Link>
-        </Button>
+        <Link to="/">
+          <Button>홈으로 돌아가기</Button>
+        </Link>
       </div>
     </div>
   );

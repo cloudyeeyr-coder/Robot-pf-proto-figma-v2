@@ -100,9 +100,13 @@ export function LoginPage() {
 
           <div className="mt-4 text-center text-sm">
             <span className="text-gray-600">계정이 없으신가요? </span>
-            <Button variant="link" className="p-0 h-auto" asChild>
-              <a href="/signup/buyer">회원가입</a>
-            </Button>
+            <button
+              type="button"
+              onClick={() => navigate('/signup/buyer')}
+              className="text-blue-600 hover:underline font-medium"
+            >
+              회원가입
+            </button>
           </div>
         </CardContent>
       </Card>

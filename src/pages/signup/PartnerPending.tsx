@@ -102,12 +102,12 @@ export function PartnerPendingPage() {
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button variant="outline" className="flex-1" asChild>
-              <Link to="/">홈으로</Link>
-            </Button>
-            <Button className="flex-1" asChild>
-              <Link to="/login">로그인</Link>
-            </Button>
+            <Link to="/" className="flex-1">
+              <Button variant="outline" className="w-full">홈으로</Button>
+            </Link>
+            <Link to="/login" className="flex-1">
+              <Button className="w-full">로그인</Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
