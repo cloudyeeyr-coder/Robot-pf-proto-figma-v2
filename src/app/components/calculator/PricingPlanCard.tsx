@@ -4,9 +4,9 @@
  * @description RaaS 비용 계산기에서 일시불(CAPEX), 리스, RaaS(OPEX)의 각 요금제 비교 옵션을 보여주기 위한 전용 카드 컴포넌트입니다.
  * 추천 플랜에 대한 시각적 하이라이트 기능과 동적인 상호작용 효과를 제공합니다.
  */
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Button } from '../../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import { memo } from 'react';
 import { cn } from '../../../lib/utils';
 
@@ -21,8 +21,6 @@ interface PricingPlanCardProps {
   tertiaryValue?: number | string | React.ReactNode;
   onQuoteRequest: () => void;
   planId: 'capex' | 'lease' | 'raas';
-}
-
 }
 
 /**

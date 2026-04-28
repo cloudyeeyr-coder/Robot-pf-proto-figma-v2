@@ -15,13 +15,13 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { raasCalcInputSchema, type RaasCalcInput } from '../../lib/schemas/raas';
+import { raasCalcInputSchema, type RaasCalcInput } from '../lib/schemas/raas';
 import {
   searchRobotModels,
   calculateRaasComparison,
   type RobotModel,
   type RaasCalculationResult,
-} from '../../lib/mockRobotModels';
+} from '../lib/mockRobotModels';
 
 /**
  * @hook useCalculatorData

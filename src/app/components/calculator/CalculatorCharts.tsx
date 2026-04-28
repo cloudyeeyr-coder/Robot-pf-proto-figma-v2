@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { type RaasCalculationResult } from '../../../lib/mockRobotModels';
 

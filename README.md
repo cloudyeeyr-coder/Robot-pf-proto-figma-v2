@@ -8,6 +8,11 @@
 
 ---
 
+## 🎨 Design Artifacts
+- **Figma Design (UI/UX Flow)**: [Robot-pf-proto-figma-v2](https://www.figma.com/design/tDphB25MDksyFaUEU9Z09d/Robot-pf-proto-figma-v2?node-id=0-1&t=T3Mqm1qeb8OVCH8M-1)
+
+---
+
 ## 📌 역할별 주요 기능 (RBAC)
 
 | 역할 | 주요 기능 |
