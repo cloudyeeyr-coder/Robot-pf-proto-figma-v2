@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../app/components/ui/card';
+import { KpiCard } from '../../app/components/dashboard/KpiCard';
 import { Badge } from '../../app/components/ui/badge';
 import {
   Table,
@@ -101,77 +102,28 @@ export function AsSlaMonitoringPage() {
 
       {/* SLA Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              24시간 목표 달성률
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <div
-                className={`text-3xl font-bold ${
-                  metrics.successRate >= 95 ? 'text-green-600' : 'text-red-600'
-                }`}
-              >
-                {metrics.successRate}%
-              </div>
-              <div className="text-sm text-gray-600">
-                목표: ≥95%
-              </div>
-            </div>
-            {metrics.successRate >= 95 ? (
-              <div className="flex items-center gap-1 mt-2 text-sm text-green-600">
-                <CheckCircle className="h-4 w-4" />
-                <span>목표 달성</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1 mt-2 text-sm text-red-600">
-                <AlertTriangle className="h-4 w-4" />
-                <span>목표 미달</span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              미배정 건수 (24시간 초과)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div
-              className={`text-3xl font-bold ${
-                metrics.unassignedCount === 0 ? 'text-green-600' : 'text-red-600'
-              }`}
-            >
-              {metrics.unassignedCount}건
-            </div>
-            {metrics.unassignedCount > 0 && (
-              <div className="flex items-center gap-1 mt-2 text-sm text-red-600">
-                <Clock className="h-4 w-4" />
-                <span>즉시 조치 필요</span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              평균 해결 시간
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">
-              {metrics.avgResolutionTime}시간
-            </div>
-            <div className="text-sm text-gray-600 mt-2">
-              목표: ≤24시간
-            </div>
-          </CardContent>
-        </Card>
+        <KpiCard
+          title="24시간 목표 달성률"
+          value={`${metrics.successRate}%`}
+          icon={CheckCircle}
+          description={metrics.successRate >= 95 ? "목표 달성 (목표: ≥95%)" : "목표 미달 (목표: ≥95%)"}
+          color={metrics.successRate >= 95 ? "text-green-600" : "text-red-600"}
+          bgColor={metrics.successRate >= 95 ? "bg-green-100" : "bg-red-100"}
+        />
+        <KpiCard
+          title="미배정 건수 (24시간 초과)"
+          value={`${metrics.unassignedCount}건`}
+          icon={Clock}
+          description={metrics.unassignedCount > 0 ? "즉시 조치 필요" : "모두 배정됨"}
+          color={metrics.unassignedCount === 0 ? "text-green-600" : "text-red-600"}
+          bgColor={metrics.unassignedCount === 0 ? "bg-green-100" : "bg-red-100"}
+        />
+        <KpiCard
+          title="평균 해결 시간"
+          value={`${metrics.avgResolutionTime}시간`}
+          icon={Clock}
+          description="목표: ≤24시간"
+        />
       </div>
 
       {/* AS Tickets Table with Tabs */}

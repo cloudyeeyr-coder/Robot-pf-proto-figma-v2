@@ -1,39 +1,38 @@
+// Sidebar.tsx
+/**
+ * @file Sidebar.tsx
+ * @description 역할별 사이드 네비게이션 메뉴를 렌더링하는 레이아웃 컴포넌트입니다.
+ * useAuth() 훅을 통해 현재 역할을 자동 식별하며, navigation.ts config에서 메뉴 항목을 읽어옵니다.
+ * 모바일 환경에서는 backdrop 오버레이와 함께 슬라이드 인/아웃 애니메이션을 지원합니다.
+ */
 import { Link, useLocation } from 'react-router';
-import { X, LayoutDashboard, Award, FileText, DollarSign, Activity, Calendar, Settings } from 'lucide-react';
+import { X } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 import { Button } from '../ui/button';
-import type { UserRole } from '../../../types';
+import { useAuth } from '../../../contexts/AuthContext';
+import { navigationByRole } from '../../../config/navigation';
 
 interface SidebarProps {
-  role: Exclude<UserRole, null>;
   isOpen?: boolean;
   onClose?: () => void;
 }
 
-const navigationByRole = {
-  admin: [
-    { label: '대시보드', path: '/admin', icon: LayoutDashboard },
-    { label: '에스크로 관리', path: '/admin/escrow', icon: DollarSign },
-    { label: 'AS SLA 모니터링', path: '/admin/as-sla', icon: Activity },
-    { label: '이벤트 로그', path: '/admin/events', icon: FileText },
-    { label: '분쟁 관리', path: '/admin/disputes', icon: Settings },
-  ],
-  manufacturer: [
-    { label: '대시보드', path: '/manufacturer/dashboard', icon: LayoutDashboard },
-    { label: '뱃지 관리', path: '/manufacturer/badges', icon: Award },
-    { label: '제안 관리', path: '/manufacturer/proposals', icon: FileText },
-  ],
-  si_partner: [
-    { label: '프로필 관리', path: '/partner/profile', icon: Settings },
-    { label: '받은 제안', path: '/partner/proposals', icon: FileText },
-    { label: '내 뱃지', path: '/partner/badges', icon: Award },
-  ],
-  buyer: [],
-};
-
-export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
+/**
+ * @component Sidebar
+ * @description 현재 인증된 사용자의 역할(role)을 기반으로 사이드바 메뉴를 자동 구성합니다.
+ * - role이 없거나 해당 역할의 메뉴가 없으면 null을 반환합니다.
+ * - isOpen prop으로 모바일 열림/닫힘 상태를 제어합니다.
+ *
+ * @param {boolean} isOpen - 모바일에서 사이드바 열림 여부 (기본값: true)
+ * @param {() => void} onClose - 모바일 사이드바 닫기 콜백
+ */
+export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const location = useLocation();
-  const navigation = navigationByRole[role] || [];
+  const { user } = useAuth();
+  
+  if (!user || !user.role) return null;
+  
+  const navigation = navigationByRole[user.role] || [];
 
   if (navigation.length === 0) return null;
 
@@ -85,7 +84,7 @@ export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
                       aria-current={isActive ? 'page' : undefined}
                       onClick={onClose}
                     >
-                      <Icon className="h-5 w-5" />
+                      {Icon && <Icon className="h-5 w-5" />}
                       <span>{item.label}</span>
                     </Link>
                   </li>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../app/components/ui/card';
+import { KpiCard } from '../../app/components/dashboard/KpiCard';
 import { Badge } from '../../app/components/ui/badge';
 import { Award, AlertCircle } from 'lucide-react';
 import {
@@ -127,34 +128,28 @@ export function PartnerBadgesPage() {
         <p className="text-gray-600">제조사로부터 받은 파트너 인증 뱃지</p>
       </div>
 
-      {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">활성 뱃지</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-blue-600">{activeBadges.length}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">만료된 뱃지</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-400">{expiredBadges.length}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">철회된 뱃지</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-red-600">{revokedBadges.length}</div>
-          </CardContent>
-        </Card>
+        <KpiCard
+          title="활성 뱃지"
+          value={activeBadges.length}
+          icon={Award}
+          color="text-blue-600"
+          bgColor="bg-blue-100"
+        />
+        <KpiCard
+          title="만료된 뱃지"
+          value={expiredBadges.length}
+          icon={Award}
+          color="text-gray-400"
+          bgColor="bg-gray-100"
+        />
+        <KpiCard
+          title="철회된 뱃지"
+          value={revokedBadges.length}
+          icon={AlertCircle}
+          color="text-red-600"
+          bgColor="bg-red-100"
+        />
       </div>
 
       {/* Active Badges */}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '../../app/components/ui/card';
+import { KpiCard } from '../../app/components/dashboard/KpiCard';
 import { Input } from '../../app/components/ui/input';
 import { Badge } from '../../app/components/ui/badge';
 import {
@@ -103,55 +104,33 @@ export function ManufacturerDashboardPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card
-          className="cursor-pointer hover:border-blue-500 transition-colors"
+        <KpiCard
+          title="활성 파트너"
+          value={`${activeCount}개사`}
+          icon={Users}
+          description="현재 뱃지 보유 중"
           onClick={() => navigate('/manufacturer/badges')}
-        >
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">활성 파트너</CardTitle>
-            <Users className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{activeCount}개사</div>
-            <p className="text-xs text-gray-600 mt-1">현재 뱃지 보유 중</p>
-          </CardContent>
-        </Card>
-
-        <Card
-          className="cursor-pointer hover:border-blue-500 transition-colors"
+        />
+        <KpiCard
+          title="대기 중인 제안"
+          value={`${pendingProposals}건`}
+          icon={Clock}
+          description="응답 대기 중"
           onClick={() => navigate('/manufacturer/proposals')}
-        >
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">대기 중인 제안</CardTitle>
-            <Clock className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{pendingProposals}건</div>
-            <p className="text-xs text-gray-600 mt-1">응답 대기 중</p>
-          </CardContent>
-        </Card>
-
-        <Card className="cursor-pointer hover:border-yellow-500 transition-colors">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">만료 예정 뱃지</CardTitle>
-            <Award className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{expiringBadges.length}건</div>
-            <p className="text-xs text-gray-600 mt-1">30일 이내 만료</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">이번 달 신규</CardTitle>
-            <TrendingUp className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{newPartnersThisMonth}개사</div>
-            <p className="text-xs text-gray-600 mt-1">신규 파트너십 체결</p>
-          </CardContent>
-        </Card>
+        />
+        <KpiCard
+          title="만료 예정 뱃지"
+          value={`${expiringBadges.length}건`}
+          icon={Award}
+          description="30일 이내 만료"
+          className="hover:border-yellow-500"
+        />
+        <KpiCard
+          title="이번 달 신규"
+          value={`${newPartnersThisMonth}개사`}
+          icon={TrendingUp}
+          description="신규 파트너십 체결"
+        />
       </div>
 
       {/* Partner Table */}

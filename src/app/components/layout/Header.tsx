@@ -17,76 +17,15 @@ interface HeaderProps {
   onMenuClick?: () => void;
 }
 
-// Role-specific avatar background colors
-const getRoleColor = (role: string | null): string => {
-  switch (role) {
-    case 'buyer':
-      return 'bg-role-buyer text-white';
-    case 'si_partner':
-      return 'bg-role-si-partner text-white';
-    case 'manufacturer':
-      return 'bg-role-manufacturer text-white';
-    case 'admin':
-      return 'bg-role-admin text-white';
-    default:
-      return 'bg-gray-400 text-white';
-  }
-};
-
-// Role labels in Korean
-const getRoleLabel = (role: string | null): string => {
-  switch (role) {
-    case 'buyer':
-      return '수요기업';
-    case 'si_partner':
-      return 'SI 파트너';
-    case 'manufacturer':
-      return '제조사';
-    case 'admin':
-      return '관리자';
-    default:
-      return '';
-  }
-};
+import { getRoleColor, getRoleLabel, navigationByRole } from '../../../config/navigation';
 
 export function Header({ onMenuClick }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
 
   const getRoleNavigation = () => {
-    if (!user) return [];
-
-    switch (user.role) {
-      case 'buyer':
-        return [
-          { label: 'SI 검색', path: '/search' },
-          { label: '계산기', path: '/calculator' },
-          { label: '내 계약', path: '/my/contracts' },
-          { label: 'AS 요청', path: '/my/as-tickets' },
-          { label: '방문 예약', path: '/booking' },
-        ];
-      case 'si_partner':
-        return [
-          { label: '프로필', path: '/partner/profile' },
-          { label: '제안서', path: '/partner/proposals' },
-          { label: '인증 뱃지', path: '/partner/badges' },
-        ];
-      case 'manufacturer':
-        return [
-          { label: '대시보드', path: '/manufacturer/dashboard' },
-          { label: '뱃지 관리', path: '/manufacturer/badges' },
-          { label: '제안 관리', path: '/manufacturer/proposals' },
-        ];
-      case 'admin':
-        return [
-          { label: '대시보드', path: '/admin' },
-          { label: '에스크로', path: '/admin/escrow' },
-          { label: 'AS SLA', path: '/admin/as-sla' },
-          { label: '이벤트', path: '/admin/events' },
-        ];
-      default:
-        return [];
-    }
+    if (!user || !user.role) return [];
+    return navigationByRole[user.role] || [];
   };
 
   const isActivePath = (path: string): boolean => {

@@ -147,61 +147,72 @@ export function SiPartnerDetailPage() {
         {/* Key Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Financial Grade */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                재무등급
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600 mb-2">
-                {partner.financial_grade}
-              </div>
-              <p className="text-xs text-gray-500">
-                갱신일: {new Date(partner.financial_grade_updated_at).toLocaleDateString('ko-KR')}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                ℹ️ 운영팀 사전 업데이트 기반
-              </p>
-            </CardContent>
+          <Card className="relative overflow-hidden border border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out group">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative z-10 flex flex-col h-full">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  재무등급
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-end">
+                <div className="text-4xl font-extrabold text-blue-600 tracking-tighter mb-2">
+                  {partner.financial_grade}
+                </div>
+                <div className="mt-2 space-y-1">
+                  <p className="text-xs font-medium text-gray-500 tracking-wide">
+                    갱신일: {new Date(partner.financial_grade_updated_at).toLocaleDateString('ko-KR')}
+                  </p>
+                  <p className="text-xs font-medium text-gray-400 tracking-wide">
+                    ℹ️ 운영팀 사전 업데이트 기반
+                  </p>
+                </div>
+              </CardContent>
+            </div>
           </Card>
 
           {/* Success Rate */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                시공 성공률
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600 mb-3">
-                {partner.success_rate}%
-              </div>
-              <div className="relative pt-1">
-                <Progress value={partner.success_rate} className="h-2" />
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                완료 {partner.completed_projects}건 / 실패 {partner.failed_projects}건
-              </p>
-            </CardContent>
+          <Card className="relative overflow-hidden border border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out group">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative z-10 flex flex-col h-full">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  시공 성공률
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-end">
+                <div className="text-4xl font-extrabold text-green-600 tracking-tighter mb-3">
+                  {partner.success_rate}<span className="text-2xl font-bold ml-1">%</span>
+                </div>
+                <div className="relative pt-1 w-full mb-3">
+                  <Progress value={partner.success_rate} className="h-2" />
+                </div>
+                <p className="text-xs font-medium text-gray-500 tracking-wide">
+                  완료 {partner.completed_projects}건 / 실패 {partner.failed_projects}건
+                </p>
+              </CardContent>
+            </div>
           </Card>
 
           {/* Average Rating */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                평균 평점
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-2">
-                <Star className="h-8 w-8 fill-yellow-400 text-yellow-400" />
-                <span className="text-3xl font-bold">{partner.average_rating}</span>
-              </div>
-              <p className="text-xs text-gray-500">
-                {partner.review_count}개의 리뷰 기반
-              </p>
-            </CardContent>
+          <Card className="relative overflow-hidden border border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out group">
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative z-10 flex flex-col h-full">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  평균 평점
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col justify-end">
+                <div className="flex items-center gap-2 mb-2">
+                  <Star className="h-8 w-8 fill-yellow-400 text-yellow-400" />
+                  <span className="text-4xl font-extrabold text-gray-900 tracking-tighter">{partner.average_rating}</span>
+                </div>
+                <p className="text-xs font-medium text-gray-500 tracking-wide mt-2">
+                  {partner.review_count}개의 리뷰 기반
+                </p>
+              </CardContent>
+            </div>
           </Card>
         </div>
 

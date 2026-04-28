@@ -1,15 +1,10 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+// Calculator.tsx
+/**
+ * @file Calculator.tsx
+ * @description 로봇 도입 방식(일시불, 리스, RaaS)에 따른 총 소유 비용(TCO) 및 누적 비용(ROI)을 비교하는 계산기 페이지입니다.
+ * 비즈니스 로직은 useCalculatorData 훅으로 분리되어 있으며, 이 컴포넌트는 UI 렌더링에 집중합니다.
+ */
 import { useNavigate } from 'react-router';
-import { raasCalcInputSchema, type RaasCalcInput } from '../lib/schemas/raas';
-import {
-  searchRobotModels,
-  getRobotModelByCode,
-  calculateRaasComparison,
-  type RobotModel,
-  type RaasCalculationResult,
-} from '../lib/mockRobotModels';
 import { Button } from '../app/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../app/components/ui/card';
 import { Input } from '../app/components/ui/input';
@@ -35,93 +30,42 @@ import {
   PopoverTrigger,
 } from '../app/components/ui/popover';
 import { QuoteRequestModal } from '../app/components/calculator/QuoteRequestModal';
-import { Badge } from '../app/components/ui/badge';
+import { PricingPlanCard } from '../app/components/calculator/PricingPlanCard';
+import { CalculatorCharts } from '../app/components/calculator/CalculatorCharts';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useCalculatorData } from '../hooks/useCalculatorData';
 
+/**
+ * @component CalculatorPage
+ * @description 계산기 입력 폼(조건), 결과 비교 카드(PricingPlanCard), 그리고 차트(CalculatorCharts)를 조합하여 렌더링하는 메인 페이지 컴포넌트입니다.
+ */
 export function CalculatorPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedModel, setSelectedModel] = useState<RobotModel | null>(null);
-  const [results, setResults] = useState<RaasCalculationResult | null>(null);
-  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<'capex' | 'lease' | 'raas'>('raas');
-
+  
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-  } = useForm<RaasCalcInput>({
-    resolver: zodResolver(raasCalcInputSchema),
-    mode: 'onChange',
-    defaultValues: {
-      robot_model: '',
-      quantity: 1,
-      term_months: '36',
-    },
-  });
-
-  const quantity = watch('quantity');
-  const termMonths = watch('term_months');
-
-  const filteredModels = searchRobotModels(searchQuery);
-
-  const handleSelectModel = (model: RobotModel) => {
-    setSelectedModel(model);
-    setValue('robot_model', model.code, { shouldValidate: true });
-    setOpen(false);
-  };
-
-  const onSubmit = (data: RaasCalcInput) => {
-    if (!selectedModel) return;
-
-    const calculation = calculateRaasComparison(
-      selectedModel.base_price,
-      data.quantity,
-      parseInt(data.term_months)
-    );
-
-    setResults(calculation);
-  };
+    open, setOpen,
+    searchQuery, setSearchQuery,
+    selectedModel,
+    results,
+    quoteModalOpen, setQuoteModalOpen,
+    selectedPlan,
+    quantity, termMonths,
+    register, handleSubmit, errors, setValue,
+    filteredModels,
+    handleSelectModel,
+    onSubmit,
+    handleQuoteRequestClick
+  } = useCalculatorData();
 
   const handleQuoteRequest = (plan: 'capex' | 'lease' | 'raas') => {
     if (!user) {
       navigate('/login');
       return;
     }
-
-    setSelectedPlan(plan);
-    setQuoteModalOpen(true);
+    handleQuoteRequestClick(plan);
   };
-
-  const planLabels = {
-    capex: '일시불 (CAPEX)',
-    lease: '리스',
-    raas: 'RaaS (OPEX)',
-  };
-
-  // Prepare chart data
-  const tcoData = results ? [
-    { name: 'CAPEX', value: results.capex.total_cost },
-    { name: 'Lease', value: results.lease.total_cost - results.lease.residual_value },
-    { name: 'RaaS', value: results.raas.total_cost },
-  ] : [];
-
-  // ROI cumulative cost data
-  const roiData = results ? Array.from({ length: parseInt(termMonths) }, (_, i) => {
-    const month = i + 1;
-    return {
-      month,
-      CAPEX: results.capex.total_cost,
-      Lease: results.lease.monthly_payment * month,
-      RaaS: results.raas.monthly_subscription * month,
-    };
-  }) : [];
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -276,166 +220,55 @@ export function CalculatorPage() {
               <>
                 {/* Comparison Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* CAPEX Card */}
-                  <Card className={results.cheapest_option === 'capex' ? 'border-green-500 border-2' : ''}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">일시불 (CAPEX)</CardTitle>
-                        {results.cheapest_option === 'capex' && (
-                          <Badge variant="default" className="bg-green-600">추천</Badge>
+                  <PricingPlanCard
+                    title="일시불 (CAPEX)"
+                    isRecommended={results.cheapest_option === 'capex'}
+                    primaryLabel="총 구매 비용"
+                    primaryValue={results.capex.total_cost}
+                    secondaryLabel="월 감가상각비"
+                    secondaryValue={results.capex.monthly_depreciation}
+                    onQuoteRequest={() => handleQuoteRequest('capex')}
+                    planId="capex"
+                  />
+                  
+                  <PricingPlanCard
+                    title="리스"
+                    isRecommended={results.cheapest_option === 'lease'}
+                    primaryLabel="월 리스료"
+                    primaryValue={results.lease.monthly_payment}
+                    secondaryLabel="총 리스 비용"
+                    secondaryValue={results.lease.total_cost}
+                    tertiaryLabel="잔존가치"
+                    tertiaryValue={results.lease.residual_value}
+                    onQuoteRequest={() => handleQuoteRequest('lease')}
+                    planId="lease"
+                  />
+                  
+                  <PricingPlanCard
+                    title="RaaS (OPEX)"
+                    isRecommended={results.cheapest_option === 'raas'}
+                    primaryLabel="월 구독료"
+                    primaryValue={results.raas.monthly_subscription}
+                    secondaryLabel="총 구독 비용"
+                    secondaryValue={results.raas.total_cost}
+                    tertiaryLabel="포함 서비스"
+                    tertiaryValue={
+                      <ul className="text-xs space-y-0.5 mt-1">
+                        {results.raas.included_services.slice(0, 3).map((service, i) => (
+                          <li key={i}>• {service}</li>
+                        ))}
+                        {results.raas.included_services.length > 3 && (
+                          <li>+{results.raas.included_services.length - 3}개 더보기</li>
                         )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">총 구매 비용</p>
-                        <p className="text-3xl font-bold">
-                          {results.capex.total_cost.toLocaleString('ko-KR')}원
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">월 감가상각비</p>
-                        <p className="text-lg">
-                          {results.capex.monthly_depreciation.toLocaleString('ko-KR')}원
-                        </p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => handleQuoteRequest('capex')}
-                      >
-                        이 플랜으로 견적 요청
-                      </Button>
-                    </CardContent>
-                  </Card>
-
-                  {/* Lease Card */}
-                  <Card className={results.cheapest_option === 'lease' ? 'border-green-500 border-2' : ''}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">리스</CardTitle>
-                        {results.cheapest_option === 'lease' && (
-                          <Badge variant="default" className="bg-green-600">추천</Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">월 리스료</p>
-                        <p className="text-3xl font-bold">
-                          {results.lease.monthly_payment.toLocaleString('ko-KR')}원
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">총 리스 비용</p>
-                        <p className="text-lg">
-                          {results.lease.total_cost.toLocaleString('ko-KR')}원
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">잔존가치</p>
-                        <p className="text-sm">
-                          {results.lease.residual_value.toLocaleString('ko-KR')}원
-                        </p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => handleQuoteRequest('lease')}
-                      >
-                        이 플랜으로 견적 요청
-                      </Button>
-                    </CardContent>
-                  </Card>
-
-                  {/* RaaS Card */}
-                  <Card className={results.cheapest_option === 'raas' ? 'border-green-500 border-2' : ''}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">RaaS (OPEX)</CardTitle>
-                        {results.cheapest_option === 'raas' && (
-                          <Badge variant="default" className="bg-green-600">추천</Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">월 구독료</p>
-                        <p className="text-3xl font-bold">
-                          {results.raas.monthly_subscription.toLocaleString('ko-KR')}원
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">총 구독 비용</p>
-                        <p className="text-lg">
-                          {results.raas.total_cost.toLocaleString('ko-KR')}원
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-600">포함 서비스</p>
-                        <ul className="text-xs space-y-0.5 mt-1">
-                          {results.raas.included_services.slice(0, 3).map((service, i) => (
-                            <li key={i}>• {service}</li>
-                          ))}
-                          {results.raas.included_services.length > 3 && (
-                            <li>+{results.raas.included_services.length - 3}개 더보기</li>
-                          )}
-                        </ul>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => handleQuoteRequest('raas')}
-                      >
-                        이 플랜으로 견적 요청
-                      </Button>
-                    </CardContent>
-                  </Card>
+                      </ul>
+                    }
+                    onQuoteRequest={() => handleQuoteRequest('raas')}
+                    planId="raas"
+                  />
                 </div>
 
-                {/* TCO Comparison Chart */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>총 소유 비용 (TCO) 비교</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={tcoData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip
-                          formatter={(value: number) => value.toLocaleString('ko-KR') + '원'}
-                        />
-                        <Legend />
-                        <Bar dataKey="value" fill="#3b82f6" name="총 비용" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-
-                {/* ROI Line Chart */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>누적 비용 추이 (ROI)</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <LineChart data={roiData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" label={{ value: '개월', position: 'insideBottomRight', offset: -5 }} />
-                        <YAxis />
-                        <Tooltip
-                          formatter={(value: number) => value.toLocaleString('ko-KR') + '원'}
-                        />
-                        <Legend />
-                        <Line type="monotone" dataKey="CAPEX" stroke="#ef4444" strokeWidth={2} name="CAPEX" />
-                        <Line type="monotone" dataKey="Lease" stroke="#f59e0b" strokeWidth={2} name="Lease" />
-                        <Line type="monotone" dataKey="RaaS" stroke="#3b82f6" strokeWidth={2} name="RaaS" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
+                {/* Charts */}
+                <CalculatorCharts results={results} termMonths={termMonths} />
               </>
             )}
           </div>

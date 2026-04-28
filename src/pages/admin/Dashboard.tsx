@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '../../app/components/ui/card';
+import { KpiCard } from '../../app/components/dashboard/KpiCard';
 import { DollarSign, AlertTriangle, Clock, TrendingUp } from 'lucide-react';
 import {
   getEscrowReleasesPending,
@@ -76,27 +77,18 @@ export function AdminDashboardPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpiCards.map((kpi) => {
-          const Icon = kpi.icon;
-          return (
-            <Card
-              key={kpi.title}
-              className="cursor-pointer hover:border-blue-500 transition-colors"
-              onClick={() => navigate(kpi.path)}
-            >
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
-                <div className={`p-2 rounded-full ${kpi.bgColor}`}>
-                  <Icon className={`h-4 w-4 ${kpi.color}`} />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{kpi.value}</div>
-                <p className="text-xs text-gray-600 mt-1">{kpi.description}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
+        {kpiCards.map((kpi) => (
+          <KpiCard
+            key={kpi.title}
+            title={kpi.title}
+            value={kpi.value}
+            icon={kpi.icon}
+            color={kpi.color}
+            bgColor={kpi.bgColor}
+            description={kpi.description}
+            onClick={() => navigate(kpi.path)}
+          />
+        ))}
       </div>
 
       {/* Quick Actions */}

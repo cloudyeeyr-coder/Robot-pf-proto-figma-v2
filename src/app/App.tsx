@@ -101,7 +101,7 @@ function AppRoutes() {
         path="/my/contracts"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <PlaceholderPage />
             </RoleLayout>
           </RouteGuard>
@@ -111,7 +111,7 @@ function AppRoutes() {
         path="/contracts/:contractId/payment"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <EscrowPaymentPage />
             </RoleLayout>
           </RouteGuard>
@@ -121,7 +121,7 @@ function AppRoutes() {
         path="/contracts/:contractId/payment/status"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <PaymentStatusPage />
             </RoleLayout>
           </RouteGuard>
@@ -131,7 +131,7 @@ function AppRoutes() {
         path="/contracts/:contractId/warranty"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <WarrantyPage />
             </RoleLayout>
           </RouteGuard>
@@ -141,7 +141,7 @@ function AppRoutes() {
         path="/contracts/:contractId/inspection"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <InspectionPage />
             </RoleLayout>
           </RouteGuard>
@@ -151,7 +151,7 @@ function AppRoutes() {
         path="/contracts/:contractId/dispute"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <DisputePage />
             </RoleLayout>
           </RouteGuard>
@@ -161,7 +161,7 @@ function AppRoutes() {
         path="/contracts/:contractId/as/new"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <NewAsTicketPage />
             </RoleLayout>
           </RouteGuard>
@@ -171,7 +171,7 @@ function AppRoutes() {
         path="/contracts/:contractId/as/:ticketId"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <AsTicketTrackingPage />
             </RoleLayout>
           </RouteGuard>
@@ -181,7 +181,7 @@ function AppRoutes() {
         path="/my/as-tickets"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <PlaceholderPage />
             </RoleLayout>
           </RouteGuard>
@@ -191,7 +191,7 @@ function AppRoutes() {
         path="/booking"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <BookingPage />
             </RoleLayout>
           </RouteGuard>
@@ -201,7 +201,7 @@ function AppRoutes() {
         path="/booking/:bookingId"
         element={
           <RouteGuard requiredRole="buyer">
-            <RoleLayout role="buyer">
+            <RoleLayout>
               <BookingConfirmationPage />
             </RoleLayout>
           </RouteGuard>
@@ -223,7 +223,7 @@ function AppRoutes() {
         path="/partner/profile"
         element={
           <RouteGuard requiredRole="si_partner">
-            <RoleLayout role="si_partner" showSidebar>
+            <RoleLayout showSidebar>
               <PartnerProfilePage />
             </RoleLayout>
           </RouteGuard>
@@ -233,7 +233,7 @@ function AppRoutes() {
         path="/partner/proposals"
         element={
           <RouteGuard requiredRole="si_partner">
-            <RoleLayout role="si_partner" showSidebar>
+            <RoleLayout showSidebar>
               <PartnerProposalsPage />
             </RoleLayout>
           </RouteGuard>
@@ -243,7 +243,7 @@ function AppRoutes() {
         path="/partner/badges"
         element={
           <RouteGuard requiredRole="si_partner">
-            <RoleLayout role="si_partner" showSidebar>
+            <RoleLayout showSidebar>
               <PartnerBadgesPage />
             </RoleLayout>
           </RouteGuard>
@@ -255,7 +255,7 @@ function AppRoutes() {
         path="/manufacturer/dashboard"
         element={
           <RouteGuard requiredRole="manufacturer">
-            <RoleLayout role="manufacturer" showSidebar>
+            <RoleLayout showSidebar>
               <ManufacturerDashboardPage />
             </RoleLayout>
           </RouteGuard>
@@ -265,7 +265,7 @@ function AppRoutes() {
         path="/manufacturer/badges"
         element={
           <RouteGuard requiredRole="manufacturer">
-            <RoleLayout role="manufacturer" showSidebar>
+            <RoleLayout showSidebar>
               <BadgeManagementPage />
             </RoleLayout>
           </RouteGuard>
@@ -275,7 +275,7 @@ function AppRoutes() {
         path="/manufacturer/proposals"
         element={
           <RouteGuard requiredRole="manufacturer">
-            <RoleLayout role="manufacturer" showSidebar>
+            <RoleLayout showSidebar>
               <ProposalManagementPage />
             </RoleLayout>
           </RouteGuard>
@@ -287,7 +287,7 @@ function AppRoutes() {
         path="/admin"
         element={
           <RouteGuard requiredRole="admin">
-            <RoleLayout role="admin" showSidebar>
+            <RoleLayout showSidebar>
               <AdminDashboardPage />
             </RoleLayout>
           </RouteGuard>
@@ -297,7 +297,7 @@ function AppRoutes() {
         path="/admin/escrow"
         element={
           <RouteGuard requiredRole="admin">
-            <RoleLayout role="admin" showSidebar>
+            <RoleLayout showSidebar>
               <EscrowManagementPage />
             </RoleLayout>
           </RouteGuard>
@@ -307,7 +307,7 @@ function AppRoutes() {
         path="/admin/as-sla"
         element={
           <RouteGuard requiredRole="admin">
-            <RoleLayout role="admin" showSidebar>
+            <RoleLayout showSidebar>
               <AsSlaMonitoringPage />
             </RoleLayout>
           </RouteGuard>
@@ -317,7 +317,7 @@ function AppRoutes() {
         path="/admin/events"
         element={
           <RouteGuard requiredRole="admin">
-            <RoleLayout role="admin" showSidebar>
+            <RoleLayout showSidebar>
               <EventLogsPage />
             </RoleLayout>
           </RouteGuard>
@@ -327,7 +327,7 @@ function AppRoutes() {
         path="/admin/disputes"
         element={
           <RouteGuard requiredRole="admin">
-            <RoleLayout role="admin" showSidebar>
+            <RoleLayout showSidebar>
               <DisputesPage />
             </RoleLayout>
           </RouteGuard>
