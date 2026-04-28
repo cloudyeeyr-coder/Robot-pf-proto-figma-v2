@@ -9,23 +9,16 @@
 
 ## 공통 진입 흐름 (모든 역할)
 
-```
-[랜딩 페이지] /
-    │
-    ├─ 비로그인 사용자 ──────────→ [로그인] /login
-    │                                   │
-    │                           ┌───────┴──────────────┐
-    │                           ↓                      ↓
-    │                   [회원가입 선택]          [소셜 로그인]
-    │                   /signup/:role
-    │                           │
-    │                           └──────────────────────┐
-    │                                                  ↓
-    └─ 로그인 완료 → [역할별 대시보드] (AuthContext.role 기준 자동 분기)
-                        │
-                ┌───────┴──────────────────────┐
-                ↓               ↓              ↓               ↓
-           [수요기업]       [SI 파트너]      [제조사]         [관리자]
+```mermaid
+flowchart TD
+    Landing["랜딩 페이지 (/)"] -->|비로그인 사용자| Login["로그인 (/login)"]
+    Login --> Signup["회원가입 선택 (/signup/:role)"]
+    Login --> Social["소셜 로그인"]
+    Landing -->|로그인 완료| Dashboard["역할별 대시보드 (AuthContext.role 기준 자동 분기)"]
+    Dashboard --> Buyer["수요기업"]
+    Dashboard --> SIPartner["SI 파트너"]
+    Dashboard --> Manufacturer["제조사"]
+    Dashboard --> Admin["관리자"]
 ```
 
 ---
@@ -34,53 +27,33 @@
 
 **목표**: 로봇 도입 방식을 비교하고, SI 파트너를 찾아 견적을 요청한다.
 
-```
-[홈] /
-  │
-  ├─── RaaS 계산기 탐색 ──────────→ [계산기] /calculator
-  │                                       │
-  │                               [로봇 모델 검색 & 선택]
-  │                               [수량 / 계약기간 입력]
-  │                               [비교 계산 클릭]
-  │                                       │
-  │                              ┌────────┴────────────┐
-  │                              ↓                     ↓
-  │                     [TCO 비교 차트]      [요금제별 결과 카드]
-  │                              │          (CAPEX / Lease / RaaS)
-  │                              │                     │
-  │                              └────────┬────────────┘
-  │                                       ↓
-  │                              [견적 요청 버튼 클릭]
-  │                                       │
-  │                              [비로그인] → /login 리다이렉트
-  │                              [로그인됨] → [QuoteRequestModal 오픈]
-  │                                       │
-  │                                       ↓
-  │                              [견적 요청 완료 (Mock)]
-  │
-  ├─── SI 파트너 검색 ─────────────→ [검색] /search
-  │                                       │
-  │                              [키워드 / 지역 / 티어 필터]
-  │                                       │
-  │                              [파트너 카드 리스트]
-  │                                       │
-  │                              [카드 클릭] → [파트너 상세] /search/:id
-  │                                               │
-  │                                    ┌──────────┴──────────┐
-  │                                    ↓                     ↓
-  │                             [역량 & 뱃지 탭]       [리뷰 요약 탭]
-  │                                                         │
-  │                                              [PDF 리포트 다운로드]
-  │
-  └─── AS 서비스 신청 ─────────────→ [AS 신청] /my/as-tickets/new
-                                          │
-                                  [계약 ID 입력 / 긴급도 선택]
-                                  [증상 설명 / 이미지 첨부]
-                                          │
-                                  [제출] → [티켓 목록] /my/as-tickets
-                                          │
-                                  [티켓 클릭] → [상세 추적 화면]
-                                  (접수 → 배정 → 출동 → 해결 단계별 상태)
+```mermaid
+flowchart TD
+    Home["홈 (/)"] --> Calc["RaaS 계산기 탐색 (/calculator)"]
+    Calc --> Input1["로봇 모델 검색 & 선택"]
+    Input1 --> Input2["수량 / 계약기간 입력"]
+    Input2 --> Submit["비교 계산 클릭"]
+    Submit --> Chart["TCO 비교 차트"]
+    Submit --> Cards["요금제별 결과 카드 (CAPEX / Lease / RaaS)"]
+    Cards --> Quote["견적 요청 버튼 클릭"]
+    Quote -->|비로그인| LoginRedirect["/login 리다이렉트"]
+    Quote -->|로그인됨| Modal["QuoteRequestModal 오픈"]
+    Modal --> Complete["견적 요청 완료 (Mock)"]
+    
+    Home --> Search["SI 파트너 검색 (/search)"]
+    Search --> Filter["키워드 / 지역 / 티어 필터"]
+    Filter --> List["파트너 카드 리스트"]
+    List --> Detail["파트너 상세 (/search/:id)"]
+    Detail --> Tab1["역량 & 뱃지 탭"]
+    Detail --> Tab2["리뷰 요약 탭"]
+    Tab2 --> PDF["PDF 리포트 다운로드"]
+    
+    Home --> AS["AS 서비스 신청 (/my/as-tickets/new)"]
+    AS --> ASInput["계약 ID 입력 / 긴급도 선택"]
+    ASInput --> ASDesc["증상 설명 / 이미지 첨부"]
+    ASDesc --> ASSubmit["제출"]
+    ASSubmit --> ASTickets["티켓 목록 (/my/as-tickets)"]
+    ASTickets --> ASTracking["상세 추적 화면 (접수-배정-출동-해결)"]
 ```
 
 ---
@@ -89,17 +62,23 @@
 
 **목표**: 자사 역량을 등록하고, 수요기업 제안에 응대하며 인증 뱃지를 관리한다.
 
-```
-[로그인 완료] → [SI 파트너 대시보드]
-                        │
-          ┌─────────────┼─────────────────┐
-          ↓             ↓                 ↓
-   [프로필 관리]   [제안서 관리]      [인증 뱃지]
-  /partner/profile  /partner/proposals  /partner/badges
-          │             │                 │
-   [역량 태그 편집]  [제안 목록]       [활성/만료/철회 현황]
-   [지역 설정]       [상태별 필터]      [만료 임박 알림]
-   [재무등급 확인]   [제안서 업로드]
+```mermaid
+flowchart TD
+    Login["로그인 완료"] --> Dashboard["SI 파트너 대시보드"]
+    Dashboard --> Profile["프로필 관리 (/partner/profile)"]
+    Dashboard --> Proposals["제안서 관리 (/partner/proposals)"]
+    Dashboard --> Badges["인증 뱃지 (/partner/badges)"]
+    
+    Profile --> EditTags["역량 태그 편집"]
+    Profile --> SetRegion["지역 설정"]
+    Profile --> FinGrade["재무등급 확인"]
+    
+    Proposals --> PropList["제안 목록"]
+    Proposals --> PropFilter["상태별 필터"]
+    Proposals --> Upload["제안서 업로드"]
+    
+    Badges --> BadgeStatus["활성/만료/철회 현황"]
+    Badges --> ExpireAlert["만료 임박 알림"]
 ```
 
 ---
@@ -108,19 +87,20 @@
 
 **목표**: SI 파트너에게 인증 뱃지를 발급하고, 수요기업 제안서를 검토한다.
 
-```
-[로그인 완료] → [제조사 대시보드] /manufacturer/dashboard
-                        │
-                [KPI 지표 확인]
-                (총 파트너 수 / 활성 제안 / 뱃지 현황)
-                        │
-          ┌─────────────┼─────────────┐
-          ↓             ↓             ↓
-   [뱃지 관리]   [제안 관리]    [파트너 목록]
-  /manufacturer/badges  /manufacturer/proposals
-          │             │
-   [발급 / 철회]   [제안서 검토]
-   [만료 갱신]     [승인 / 반려]
+```mermaid
+flowchart TD
+    Login["로그인 완료"] --> Dashboard["제조사 대시보드 (/manufacturer/dashboard)"]
+    Dashboard --> KPI["KPI 지표 확인 (총 파트너 수 / 활성 제안 / 뱃지 현황)"]
+    
+    Dashboard --> Badges["뱃지 관리 (/manufacturer/badges)"]
+    Dashboard --> Proposals["제안 관리 (/manufacturer/proposals)"]
+    Dashboard --> Partners["파트너 목록"]
+    
+    Badges --> IssueRevoke["발급 / 철회"]
+    Badges --> Renew["만료 갱신"]
+    
+    Proposals --> Review["제안서 검토"]
+    Proposals --> ApproveReject["승인 / 반려"]
 ```
 
 ---
@@ -129,20 +109,21 @@
 
 **목표**: 플랫폼 전체 지표를 관리하고, 에스크로 결제 및 AS SLA를 감시한다.
 
-```
-[로그인 완료] → [관리자 대시보드] /admin
-                        │
-                [KPI 전체 현황]
-                (전체 거래액 / 미결 분쟁 / AS 성공률)
-                        │
-          ┌─────────────┼──────────────────┐
-          ↓             ↓                  ↓
-   [에스크로 관리] [AS SLA 모니터링]  [이벤트 로그]
-   /admin/escrow  /admin/as-sla       /admin/events
-          │             │
-  [결제 승인/반려]  [SLA 달성률 차트]
-  [분쟁 조정]      [미배정 티켓 목록]
-  /admin/disputes  [탭별 필터: 전체/미배정/완료/SLA 미충족]
+```mermaid
+flowchart TD
+    Login["로그인 완료"] --> Dashboard["관리자 대시보드 (/admin)"]
+    Dashboard --> KPI["KPI 전체 현황 (전체 거래액 / 미결 분쟁 / AS 성공률)"]
+    
+    Dashboard --> Escrow["에스크로 관리 (/admin/escrow)"]
+    Dashboard --> ASSLA["AS SLA 모니터링 (/admin/as-sla)"]
+    Dashboard --> Events["이벤트 로그 (/admin/events)"]
+    
+    Escrow --> Payment["결제 승인/반려"]
+    Escrow --> Disputes["분쟁 조정 (/admin/disputes)"]
+    
+    ASSLA --> Chart["SLA 달성률 차트"]
+    ASSLA --> Unassigned["미배정 티켓 목록"]
+    ASSLA --> TabFilter["탭별 필터 (전체/미배정/완료/SLA 미충족)"]
 ```
 
 ---
@@ -150,30 +131,26 @@
 ## 공통 보조 흐름
 
 ### 알림 (Notifications)
-```
-[헤더 알림 아이콘] → [NotificationDropdown]
-                              │
-                     [알림 목록 클릭]
-                              │
-                     [관련 페이지로 이동] (딥링크)
+```mermaid
+flowchart TD
+    Icon["헤더 알림 아이콘"] --> Dropdown["NotificationDropdown"]
+    Dropdown --> Click["알림 목록 클릭"]
+    Click --> DeepLink["관련 페이지로 이동 (딥링크)"]
 ```
 
 ### 방문 예약 (Booking)
-```
-[수요기업] → /booking
-               │
-       [날짜/시간 선택] → [예약 확정]
-               │
-       [예약 완료] → /booking/confirmation
+```mermaid
+flowchart TD
+    Buyer["수요기업"] --> Booking["방문 예약 (/booking)"]
+    Booking --> Select["날짜/시간 선택"]
+    Select --> Confirm["예약 확정"]
+    Confirm --> Complete["예약 완료 (/booking/confirmation)"]
 ```
 
 ### 인증 보호 흐름 (RouteGuard)
-```
-[페이지 접근 시도]
-        │
-[RouteGuard 검사]
-        │
-   ┌────┴────────────────┐
-   ↓                     ↓
-[미인증] → /login    [권한 불일치] → /forbidden
+```mermaid
+flowchart TD
+    Attempt["페이지 접근 시도"] --> Guard["RouteGuard 검사"]
+    Guard -->|미인증| Login["로그인 (/login)"]
+    Guard -->|권한 불일치| Forbidden["접근 금지 (/forbidden)"]
 ```
